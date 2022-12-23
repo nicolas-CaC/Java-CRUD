@@ -45,21 +45,89 @@ public class ProductosDao {
             System.out.println(e.toString());
             return null;
         }
+    }
+    
+    public Productos mostrarProducto(int refId){
         
+        PreparedStatement ps;
+        ResultSet rs;
+        Productos producto = null;
         
-//        public Productos mostrarProducto(int refId){
-//    
-//        }
-//        
-//        public boolean agregarProductos(Productos producto){
-//            
-//        }
-//        
-//        public boolean actualizarProducto(Productos producto){
-//            
-//        }
-//        
-//        public boolean borrarProducto(int refId){
-//            
-//        }
+        try{
+            ps= connect.prepareStatement("SELECT * FROM productos WHERE id=?;");
+            ps.setInt(1, refId);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                String marca = rs.getString("marca");
+                int stock = rs.getInt("stock");
+                String categoria = rs.getString("categoria");
+                producto = new Productos(id, stock,nombre, marca, categoria);
+            }
+                return producto;
+        }
+        catch(SQLException e){
+            System.out.println(e.toString());
+            return producto;                
+        }
+        
+    }
+        
+    public boolean agregarProductos(Productos producto){
+
+        PreparedStatement ps;
+
+        try{
+            ps = connect.prepareStatement("INSERT INTO productos(id, nombre, marca, stock, categoria) VALUES(?,?,?,?,?);");
+            ps.setInt(1,producto.getId());
+            ps.setString(2, producto.getNombre());
+            ps.setString(3, producto.getMarca());
+            ps.setInt(4, producto.getStock());
+            ps.setString(5, producto.getCategoria());
+            ps.execute();
+            return true;
+        }
+        catch(SQLException e){
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
+    public boolean actualizarProducto(Productos producto){
+
+        PreparedStatement ps;
+
+        try{
+            ps = connect.prepareStatement("UPDATE productos SET nombre=?, marca=?, stock=?, categoria=? WHERE id=?;");
+            ps.setString(1, producto.getNombre());
+            ps.setString(2, producto.getMarca());
+            ps.setInt(3, producto.getStock());
+            ps.setString(4, producto.getCategoria());
+            ps.setInt(5,producto.getId());
+            ps.execute();
+            return true;            
+        }
+        catch(SQLException e){
+            System.out.println(e.toString());
+            return false;                
+        }
+    }
+
+    public boolean borrarProducto(int refId){
+
+        PreparedStatement ps;
+
+          try{
+            ps = connect.prepareStatement("DELETE FROM productos WHERE id=?;");
+            ps.setInt(1, refId);
+            ps.execute();
+            return true;            
+        }
+        catch(SQLException e){
+            System.out.println(e.toString());
+            return false;                
+        }
+    }
 }

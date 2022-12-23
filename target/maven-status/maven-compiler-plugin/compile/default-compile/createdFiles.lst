@@ -1,0 +1,5 @@
+config\Conexion.class
+controllers\ProductosController.class
+.netbeans_automatic_build
+models\ProductosDao.class
+models\Productos.class
